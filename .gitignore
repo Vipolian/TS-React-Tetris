@@ -1,0 +1,11 @@
+node_modules/
+build/
+
+.vscode/
+.idea
+
+.dapp_build
+.package-lock.json
+yarn-error.log
+
+*.swp
