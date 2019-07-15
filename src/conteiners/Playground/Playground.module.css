@@ -1,0 +1,22 @@
+.playground {
+  margin-top: 10vh;
+  height: 70vh;
+  width: 720px;
+  background-color: lightgray;
+}
+
+.board {
+  display: grid;
+  border: 1px solid #444;
+  width: calc(10 * 25px);
+  height: calc(24 * 25px);
+  grid-template-columns: repeat(10, 1fr);
+  grid-template-rows: repeat(24, 1fr);
+}
+
+.boardControl {
+  display: flex;
+  margin: 0 auto;
+  width: 400px;
+  flex-direction: row;
+}
