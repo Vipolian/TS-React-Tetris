@@ -11,6 +11,7 @@ export function makeBoad (rotation: number) {
 
 export function getBoardPosition(rotation: number, ...position: number[])  {
   return position.map(index => {
+    console.log(makeBoad(rotation));
     return makeBoad(rotation)[index];
   });
 }
@@ -49,9 +50,12 @@ export function getRotatedPosition (
   newRotation: number,
   move: number
 ) {
-  const { move: originalMove } = rotation[originalRotation];
-  const { move: newMove } = rotation[newRotation];
+  const { moves: originalMove } = rotation[originalRotation];
+  const { moves: newMove } = rotation[newRotation];
   const [row, col] = boardPosition;
+
+  console.log(rotation);
+
   return [
     row + originalMove[move][0] - newMove[move][0],
     col + originalMove[move][1] - newMove[move][1]
@@ -104,7 +108,7 @@ export function getRotatedCells (
 }
 
 export function randomBlock () {
-  return Object.keys(Blocks)[_.random(1000, false)! % 7] as any;
+  return Object.keys(Blocks)[_.random(1000, false)! % 1] as any;
 }
 
 export function isPlace (cells: number[][], board: any) {

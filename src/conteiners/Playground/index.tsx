@@ -173,6 +173,8 @@ const Playground: React.FC = () => {
           .fill(0)
           .map(() => null)
       );
+
+    console.log(newBoard);
     if (emptyRows.length > 0) {
       setBoard([...emptyRows, ...newBoard]);
     }
@@ -180,6 +182,14 @@ const Playground: React.FC = () => {
 
   useInterval(drop, onGame ? delay : null);
 
+  useInterval(() => {
+    const row = Array(10).fill("I");
+
+    row[_.random(0, 10)] = null;
+    row[_.random(0, 10)] = null;
+
+    setBoard([...board.filter((_, i) => i > 0), row]);
+  }, onGame ? 5000 : null);
 
   const start = () => {
     setOnGame(true);
