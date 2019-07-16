@@ -1,6 +1,6 @@
 .playground {
   margin-top: 10vh;
-  height: 70vh;
+  height: 80vh;
   width: 720px;
   background-color: lightgray;
 }
@@ -16,7 +16,19 @@
 
 .boardControl {
   display: flex;
-  margin: 0 auto;
-  width: 400px;
+  margin: 20px auto;
+  width: 252px;
   flex-direction: row;
+}
+
+.start {
+  position: absolute;
+  width: 90px;
+  height: 50px;
+  top: 101px;
+  right: 100px;
+  background-color: blueviolet;
+  color: white;
+  font-weight: bold;
+  font-size: 18px;
 }

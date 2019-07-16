@@ -2,6 +2,8 @@ import React, {useState, useEffect, useRef} from 'react';
 import styled from 'styled-components';
 import _ from 'lodash';
 
+import { Board } from '../../types/types';
+
 import {
   getRotatedCells,
   getOriginalSell,
@@ -17,7 +19,7 @@ import s from './Playground.module.css';
 
 const Playground: React.FC = () => {
 
-  const delay = 30;
+  const delay = 150;
   const initPosition = [0, 2];
 
   const [onGame, setOnGame] = useState(false);
@@ -178,6 +180,7 @@ const Playground: React.FC = () => {
 
   useInterval(drop, onGame ? delay : null);
 
+
   const start = () => {
     setOnGame(true);
     boardRef.current!.focus();
@@ -189,8 +192,9 @@ const Playground: React.FC = () => {
     rotation
   );
 
-  const Area = (board: any) => (
-    <div>
+
+  const Area = ( { board }: { board: Board } ) => (
+    <>
       {board.map((row: any, rowIdx: any) =>
         row.map(
           (type: any, colIdx: any) =>
@@ -202,21 +206,21 @@ const Playground: React.FC = () => {
             )
         )
       )}
-    </div>
+    </>
   );
 
   const AreaSells = ({cells}: {
     cells: any[];
   }) => {
     return (
-      <div>
+      <>
         {cells.map(cell => (
           <Cell
             key={`${cell[0]}${cell[1]}`}
             cell={cell}
           />
         ))}
-      </div>
+      </>
     );
   };
   return (
@@ -227,7 +231,7 @@ const Playground: React.FC = () => {
             cells={activeCells}
           />
           <Area board={board}/>
-          <button disabled={onGame} onClick={start}>
+          <button disabled={onGame} onClick={start} className={s.start}>
             Start
           </button>
         </div>
@@ -241,12 +245,12 @@ type CellProps = {
 };
 export const Cell = styled.div.attrs<any>(p => ({
   style: {
-    backgroundColor: 'green',
+    backgroundColor: 'blueviolet',
     gridRow: p.cell[0],
     gridColumn: p.cell[1]
   }
 }))<CellProps>`
-  border: 1px solid '#888';
+  border: 3px solid 'black';
 `;
 
 

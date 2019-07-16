@@ -1,5 +1,6 @@
 import _ from 'lodash';
 import { getBoardPosition } from '../boardControl';
+import { Board } from '../../types/types';
 
 const rotate = [
   [[0, 0], [0, 0], [0, 0], [0, 0], [0, 0]],
@@ -81,7 +82,7 @@ export const Blocks: any = {
   }
 };
 
-export const initialBoard = Array(24)
+export const initialBoard: Board = Array(24)
   .fill(0)
   .map(row =>
     Array(10)

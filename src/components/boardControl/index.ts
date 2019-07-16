@@ -2,9 +2,9 @@ import _ from 'lodash';
 import { Blocks } from 'components/blocks';
 
 export function makeBoad (rotation: number) {
-  const arr5 = _.range(1, 6);
+  const arr = _.range(1, 6);
   return rotate(
-    arr5.map(row => arr5.map(col => [row, col])),
+    arr.map(row => arr.map(col => [row, col])),
     rotation
   ).flat();
 }
@@ -69,16 +69,16 @@ export function getOriginalSell (
 }
 
 export function getRotation (
-  rotationDatum: any,
-  fromRotation: number,
-  toRotation: number,
-  offset: number
+  rotation: any,
+  originalRotation: number,
+  newRotation: number,
+  move: number
 ) {
-  const { offsets: fromOffsets } = rotationDatum[fromRotation];
-  const { offsets: toOffsets } = rotationDatum[toRotation];
+  const { moves: fromOffsets } = rotation[originalRotation];
+  const { moves: toOffsets } = rotation[newRotation];
   return [
-    fromOffsets[offset][0] - toOffsets[offset][0],
-    fromOffsets[offset][1] - toOffsets[offset][1]
+    fromOffsets[move][0] - toOffsets[move][0],
+    fromOffsets[move][1] - toOffsets[move][1]
   ];
 }
 
@@ -95,9 +95,9 @@ export function getRotatedCells (
     newRotation,
     move
   );
-  const { pos } = rotation[newRotation];
+  const { position } = rotation[newRotation];
   const [row, col] = boardPosition;
-  return pos.map((cell: any) => [
+  return position.map((cell: any) => [
     cell[0] + rotationMove[0] + row,
     cell[1] + rotationMove[1] + col
   ]);
