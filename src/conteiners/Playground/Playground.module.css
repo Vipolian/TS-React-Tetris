@@ -17,7 +17,7 @@
 .boardControl {
   display: flex;
   margin: 20px auto;
-  width: 252px;
+  width: 352px;
   flex-direction: row;
 }
 

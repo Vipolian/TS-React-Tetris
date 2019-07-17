@@ -2,7 +2,10 @@ import React, {useState, useEffect, useRef} from 'react';
 import styled from 'styled-components';
 import _ from 'lodash';
 
-import { Board } from '../../types/types';
+import Score from 'components/score'
+
+import { Board } from 'types/types';
+
 
 import {
   getRotatedCells,
@@ -19,12 +22,16 @@ import s from './Playground.module.css';
 
 const Playground: React.FC = () => {
 
-  const delay = 150;
+  const initialDelay = 300;
   const initPosition = [0, 2];
+  const initialLvl = 1;
 
-  const [onGame, setOnGame] = useState(false);
   const [board, setBoard] = useState(initialBoard);
+  const [delay, setDelay] = useState(initialDelay);
   const [[row, col], setPosition] = useState(initPosition);
+  const [lvl, setLvl] = useState(initialLvl);
+  const [onGame, setOnGame] = useState(false);
+  const [score, setScore] = useState(0);
   const boardRef = useRef<HTMLDivElement>(null);
   const [rotation, setRotation] = useState(0);
   const [nextBlock, setNextBlock] = useState(
@@ -139,7 +146,21 @@ const Playground: React.FC = () => {
     }
   };
 
-  const useInterval = (callback: any, delay: number | null) => {
+  const addCell = () => {
+    if (lvl < 2 ) return null;
+    const row = Array(10).fill("I");
+    row[_.random(0, 10)] = null;
+    row[_.random(0, 10)] = null;
+
+    setBoard([...board.filter((_, i) => i > 0), row]);
+  };
+
+  const reduceDelay = () => {
+    if (delay < 50 ) return null;
+    setDelay(delay - 30);
+  };
+
+  const useInterval = (callback: Function, delay: number | null) => {
     const savedCallback: { current: any } = useRef(callback);
 
     useEffect(() => {
@@ -155,7 +176,7 @@ const Playground: React.FC = () => {
         return () => clearInterval(id);
       }
     }, [delay]);
-  }
+  };
 
   useEffect(() => {
     boardRef.current!.focus();
@@ -166,6 +187,13 @@ const Playground: React.FC = () => {
       setOnGame(false);
     }
     const newBoard = board.filter((row: any) => row.some((cell: any) => cell === null));
+    const newScore = score + (board.length - newBoard.length) * 50;
+    const newLvl = (newScore % 100 > score % 100) ? lvl+1 : lvl;
+    if (newLvl > lvl) {
+      setLvl(newLvl);
+      reduceDelay()
+    }
+    setScore(newScore);
     const emptyRows = Array(24 - newBoard.length)
       .fill(0)
       .map(() =>
@@ -173,23 +201,13 @@ const Playground: React.FC = () => {
           .fill(0)
           .map(() => null)
       );
-
-    console.log(newBoard);
     if (emptyRows.length > 0) {
       setBoard([...emptyRows, ...newBoard]);
     }
-  }, [board]);
+  }, [board, lvl, score, reduceDelay]);
 
   useInterval(drop, onGame ? delay : null);
-
-  useInterval(() => {
-    const row = Array(10).fill("I");
-
-    row[_.random(0, 10)] = null;
-    row[_.random(0, 10)] = null;
-
-    setBoard([...board.filter((_, i) => i > 0), row]);
-  }, onGame ? 5000 : null);
+  useInterval(addCell, onGame ? 3000 : null);
 
   const start = () => {
     setOnGame(true);
@@ -244,6 +262,9 @@ const Playground: React.FC = () => {
           <button disabled={onGame} onClick={start} className={s.start}>
             Start
           </button>
+        </div>
+        <div className={s.scoreBlock}>
+          <Score score={score} lvl={lvl}/>
         </div>
       </div>
     </div>
