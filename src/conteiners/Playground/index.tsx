@@ -4,7 +4,7 @@ import _ from 'lodash';
 
 import Score from 'components/score'
 
-import { Board } from 'types/types';
+import { Board, CellType, Block, BlockTypes, RowType } from 'types/types';
 
 
 import {
@@ -110,21 +110,23 @@ const Playground: React.FC = () => {
 
   const land = () => {
     const newBoard = board.map(r => r.map(c => c));
+    console.log(newBoard);
     getOriginalSell(
       Blocks[currentBlock].rotations,
       [row, col],
       rotation
-    ).map(([cellRow, cellCol]: any) => {
+    ).map(([cellRow, cellCol]: number[]) => {
       newBoard[cellRow - 1][cellCol - 1] = currentBlock;
     });
     setBoard(newBoard);
     setCurrentBlock(nextBlock);
-    setNextBlock(_.sample(Object.keys(Blocks)) as any);
+    if (!onGame) {return null}
+    setNextBlock(_.sample(Object.keys(Blocks)) as BlockTypes);
     setPosition([0, 2]);
     setRotation(0);
   };
 
-  const handleKeyPress = (e: any) => {
+  const handleKeyPress = (e: React.KeyboardEvent<HTMLDivElement>) => {
     switch (e.keyCode) {
       case 37: // left
         moveLeft();
@@ -161,7 +163,7 @@ const Playground: React.FC = () => {
   };
 
   const useInterval = (callback: Function, delay: number | null) => {
-    const savedCallback: { current: any } = useRef(callback);
+    const savedCallback: { current: Function } = useRef(callback);
 
     useEffect(() => {
       savedCallback.current = callback;
@@ -183,10 +185,10 @@ const Playground: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    if (board[3].some((cell: any) => cell !== null)) {
+    if (board[3].some((cell: CellType) => cell !== null)) {
       setOnGame(false);
     }
-    const newBoard = board.filter((row: any) => row.some((cell: any) => cell === null));
+    const newBoard = board.filter((row: RowType) => row.some((cell: CellType) => cell === null));
     const newScore = score + (board.length - newBoard.length) * 50;
     const newLvl = (newScore % 100 > score % 100) ? lvl+1 : lvl;
     if (newLvl > lvl) {
@@ -207,7 +209,7 @@ const Playground: React.FC = () => {
   }, [board, lvl, score, reduceDelay]);
 
   useInterval(drop, onGame ? delay : null);
-  useInterval(addCell, onGame ? 3000 : null);
+  useInterval(addCell, onGame ? 6000 : null);
 
   const start = () => {
     setOnGame(true);
@@ -223,9 +225,9 @@ const Playground: React.FC = () => {
 
   const Area = ( { board }: { board: Board } ) => (
     <>
-      {board.map((row: any, rowIdx: any) =>
+      {board.map((row: RowType, rowIdx: number) =>
         row.map(
-          (type: any, colIdx: any) =>
+          (type: CellType, colIdx: number) =>
             type && (
               <Cell
                 key={`${rowIdx}${colIdx}`}
@@ -238,7 +240,7 @@ const Playground: React.FC = () => {
   );
 
   const AreaSells = ({cells}: {
-    cells: any[];
+    cells: number[][];
   }) => {
     return (
       <>
@@ -253,18 +255,18 @@ const Playground: React.FC = () => {
   };
   return (
     <div className={s.playground}>
-      <div className={s.boardControl} tabIndex={0} ref={boardRef} onKeyDown={handleKeyPress}>
+      <div className={s.boardBlock} tabIndex={0} ref={boardRef} onKeyDown={handleKeyPress}>
         <div className={s.board}>
           <AreaSells
             cells={activeCells}
           />
           <Area board={board}/>
-          <button disabled={onGame} onClick={start} className={s.start}>
-            Start
-          </button>
         </div>
-        <div className={s.scoreBlock}>
+        <div className={s.controlBlock}>
           <Score score={score} lvl={lvl}/>
+          <button disabled={onGame} onClick={start} className={s.start}>
+            START
+          </button>
         </div>
       </div>
     </div>
@@ -272,9 +274,9 @@ const Playground: React.FC = () => {
 };
 
 type CellProps = {
-  cell: any;
+  cell: number[];
 };
-export const Cell = styled.div.attrs<any>(p => ({
+export const Cell = styled.div.attrs<CellProps>(p => ({
   style: {
     backgroundColor: 'blueviolet',
     gridRow: p.cell[0],

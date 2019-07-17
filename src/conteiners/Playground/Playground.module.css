@@ -1,4 +1,7 @@
 .playground {
+  display: flex;
+  justify-content: center;
+  align-items: center;
   margin-top: 10vh;
   height: 80vh;
   width: 720px;
@@ -7,28 +10,35 @@
 
 .board {
   display: grid;
-  border: 1px solid #444;
+  outline: none;
+  border-right: 5px solid blueviolet;
   width: calc(10 * 25px);
   height: calc(24 * 25px);
   grid-template-columns: repeat(10, 1fr);
   grid-template-rows: repeat(24, 1fr);
 }
 
-.boardControl {
+.boardBlock {
+  border: 5px solid blueviolet;
   display: flex;
-  margin: 20px auto;
+  height: calc(24 * 25px);
   width: 352px;
   flex-direction: row;
 }
 
 .start {
-  position: absolute;
-  width: 90px;
+  margin-top: 10px;
+  width: 102px;
+  border: none;
   height: 50px;
-  top: 101px;
-  right: 100px;
   background-color: blueviolet;
   color: white;
   font-weight: bold;
   font-size: 18px;
+}
+
+.controlBlock {
+  display: flex;
+  flex-direction: column;
+  width: 100px;
 }

@@ -8,6 +8,7 @@
 }
 
 .scoreBlock {
-  width: 80px;
-  margin: 15px;
+  width: 100px;
+  font-weight: bold;
+  margin: 10px 5px;
 }
